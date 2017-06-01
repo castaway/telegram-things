@@ -1,0 +1,47 @@
+
+
+Python: http://github.com/twilio/twilio-python
+
+    from twilio.rest import TwilioRestClient
+    # put your own credentials here
+    ACCOUNT_SID = '<AccountSid>'
+    AUTH_TOKEN = '<AuthToken>'
+
+    client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
+
+    client.messages.create(
+        to = '<ToNumber>',
+        from_ = '<FromNumber>',
+        body = '<BodyText>',
+    )
+
+Node.js: http://github.com/twilio/twilio-node
+
+    // Twilio Credentials
+    var accountSid = '<AccountSid>';
+    var authToken = '<AuthToken>';
+
+    //require the Twilio module and create a REST client
+    var client = require('twilio')(accountSid, authToken);
+
+    client.messages.create({
+        to: '<ToNumber>',
+        from: '<FromNumber>',
+        body: '<BodyText>',
+    }, function (err, message) {
+        console.log(message.sid);
+    });
+
+# respond to incoming message / webhook:
+https://www.twilio.com/docs/quickstart/ruby/sms/hello-monkey
+https://www.twilio.com/docs/guides/sms/how-to-receive-and-reply-in-python
+https://www.twilio.com/docs/api/twiml
+
+https://metacpan.org/pod/WWW::Twilio::API
+
+/usr/src/perl/libs/sms-messenger/perl5
+
+* incoming SMS messages -> Twilio
+-> Telegram
+-> ?
+

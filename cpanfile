@@ -1,0 +1,9 @@
+requires 'WWW::Twilio::API';
+requires 'Web::Simple';
+requires 'Template';
+requires 'WWW::Telegram::BotAPI';
+requires 'Config::General';
+requires 'Data::Printer';
+requires 'JSON::XS';
+requires 'Path::Class';
+requires 'Daemon::Control';

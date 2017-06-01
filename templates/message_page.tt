@@ -1,0 +1,15 @@
+<html>
+  <head>
+    <title>Messages</title>
+  </head>
+  <body>
+    <div>[% error || '' %]</div>
+    <div>
+      [% FOREACH msg = messages.messages %]
+      <div>
+        [% msg.from %] -> [% msg.to %] "[% msg.body %]" ([% msg.date_created %])
+      </div>
+      [% END %]
+    </div>
+  </body>
+</html>
