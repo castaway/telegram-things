@@ -4,12 +4,10 @@ use local::lib '/usr/src/perl/libs/sms-messenger/perl5';
 
 use Web::Simple;
 use Config::General;
-#use WWW::Twilio::API;
 use JSON::XS;
 use Template;
 use Path::Class;
 use Data::Dumper;
-#use WWW::Telegram::BotAPI;
 use Number::Phone;
 
 use lib 'lib';
@@ -30,7 +28,8 @@ has 'config' => ( is => 'ro',
 # retrieved by the group_chat_created message that.  FIXME: Figure out
 # a better way to unhardcode?
 has 'tg_general_chatid' => (is => 'ro',
-                            default => '-151536833');
+                            lazy => 1,
+                            default => sub { my ($self) = @_; return $self->config->{Telegram}{default_chat_id} });
 
 sub _build_tt {
     my ($self) = @_;
@@ -89,6 +88,7 @@ sub dispatch_request {
 
         my $in_number = $_{From};
         my $in_text = $_{Body};
+        my $to_num = $_{To};
         my $number_object = Number::Phone->new($in_number);
         my @number_info;
         my $number_pretty;
@@ -104,12 +104,17 @@ sub dispatch_request {
                 $number_pretty = $number_object->format;           
             }
             my $number_info = join " ", @number_info;
-
-        }            
-            my $text = "Incoming SMS from $number_pretty ($number_info): $in_text"; 
-
-        $self->apis->tg_api->sendMessage({chat_id => $self->tg_general_chatid,
-                                    text => $text});
+            
+            my $text = "Incoming SMS from $number_pretty ($number_info): $in_text";
+            my $telegram_num = $self->config->{SMS}{OurNumber};
+            print STDERR "To: >$to_num<, Our: $telegram_num\n";
+            if($to_num =~ /\Q$telegram_num\E/) {
+                print STDERR "Sending to Telegram...\n";
+                $self->apis->tg_api->sendMessage({chat_id => $self->tg_general_chatid,
+                                                  text => $text});
+            }
+        }
+	
         
         return [ 200,
                  ['Content-type', 'text/xml' ],
